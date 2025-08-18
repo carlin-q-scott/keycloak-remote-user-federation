@@ -7,7 +7,7 @@ import org.forrest.keycloak.bind.RemoteUserEntity;
 import org.jboss.logging.Logger;
 import org.keycloak.common.util.MultivaluedHashMap;
 import org.keycloak.component.ComponentModel;
-import org.keycloak.credential.LegacyUserCredentialManager;
+import org.keycloak.credential.UserCredentialManager;
 import org.keycloak.models.*;
 import org.keycloak.storage.StorageId;
 import org.keycloak.storage.adapter.AbstractUserAdapterFederatedStorage;
@@ -32,8 +32,8 @@ class RemoteUserAdapter extends AbstractUserAdapterFederatedStorage {
 
     @Override
     public SubjectCredentialManager credentialManager() {
-        log("[credentialManager] new LegacyUserCredentialManager...");
-        return new LegacyUserCredentialManager(session, realm, this);
+    log("[credentialManager] using new UserCredentialManager...");
+    return new UserCredentialManager(session, realm, this);
     }
 
     @Override
