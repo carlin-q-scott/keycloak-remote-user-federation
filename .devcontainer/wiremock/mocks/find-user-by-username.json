@@ -1,0 +1,35 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathEqualTo": "/api/users/find",
+    "queryParameters": {
+      "type": {
+        "equalTo": "username"
+      },
+      "username": {
+        "matches": ".*"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "id": "{{randomValue length=36 type='ALPHANUMERIC'}}",
+      "firstName": "{{request.query.username}}_first",
+      "lastName": "{{request.query.username}}_last",
+      "userName": "{{request.query.username}}",
+      "email": "{{request.query.username}}@example.com",
+      "emailVerified": true,
+      "enabled": true,
+      "createdAt": "{{now format='yyyy-MM-dd HH:mm:ss'}}",
+      "attributes": {
+        "department": "Engineering",
+        "location": "Remote"
+      },
+      "roles": ["user", "developer"]
+    }
+  }
+}

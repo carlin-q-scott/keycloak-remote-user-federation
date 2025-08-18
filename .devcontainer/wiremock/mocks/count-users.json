@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathEqualTo": "/api/users/count"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "total": 3
+    }
+  }
+}

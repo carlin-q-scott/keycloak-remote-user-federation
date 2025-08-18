@@ -1,0 +1,145 @@
+{
+  "id": "test",
+  "realm": "test",
+  "displayName": "Test Realm",
+  "enabled": true,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": false,
+  "rememberMe": true,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "waitIncrementSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "failureFactor": 30,
+  "roles": {
+    "realm": [
+      {
+        "id": "offline_access",
+        "name": "offline_access",
+        "description": "OIDC role for offline access",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "test"
+      },
+      {
+        "id": "uma_authorization",
+        "name": "uma_authorization",
+        "description": "Default Authorization Role",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "test"
+      }
+    ]
+  },
+  "users": [
+    {
+      "id": "admin-user-id",
+      "username": "admin",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "hashedSaltedValue": "admin123",
+          "salt": "",
+          "hashIterations": 27500,
+          "algorithm": "pbkdf2-sha256"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "notBefore": 0,
+      "groups": []
+    }
+  ],
+  "clients": [
+    {
+      "id": "test-client-id",
+      "clientId": "test-client",
+      "name": "Test Client",
+      "description": "Test client for remote user federation",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "test-client-secret",
+      "redirectUris": ["http://localhost:8080/*"],
+      "webOrigins": ["http://localhost:8080"],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "publicClient": false,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "fullScopeAllowed": true
+    }
+  ],
+  "components": {
+    "org.keycloak.storage.UserStorageProvider": [
+      {
+        "id": "72b50301-15d7-4fcf-87c5-5a5538136107",
+        "name": "ancoraDocs Database Users",
+        "providerId": "Remote User Provider",
+        "subComponents": {},
+        "config": {
+          "count_user_endpoint": [
+            "/count"
+          ],
+          "verify_user_endpoint": [
+            "/verify"
+          ],
+          "add_role_to_token": [
+            "true"
+          ],
+          "find_user_endpoint": [
+            "/user"
+          ],
+          "debug_log_enabled": [
+            "false"
+          ],
+          "search_user_endpoint": [
+            "/search"
+          ],
+          "cachePolicy": [
+            "DEFAULT"
+          ],
+          "url": [
+            "https://wiremock:8080"
+          ],
+          "enabled": [
+            "true"
+          ]
+        }
+      }
+    ]
+  },
+  "browserFlow": "browser",
+  "registrationFlow": "registration",
+  "directGrantFlow": "direct grant",
+  "resetCredentialsFlow": "reset credentials",
+  "clientAuthenticationFlow": "clients",
+  "dockerAuthenticationFlow": "docker auth",
+  "attributes": {
+    "cibaBackchannelTokenDeliveryMode": "poll",
+    "cibaExpiresIn": "120",
+    "cibaInterval": "5",
+    "cibaAuthRequestedUserHint": "login_hint",
+    "parRequestUriLifespan": "60",
+    "cibaBackchannelUserCodeParameter": "false",
+    "cibaBackchannelBindingMessage": "false",
+    "displayName": "Test Realm",
+    "displayNameHtml": "<div class=\"kc-logo-text\"><span>Test Realm</span></div>"
+  }
+}

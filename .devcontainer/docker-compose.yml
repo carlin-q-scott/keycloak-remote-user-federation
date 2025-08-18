@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # VS Code dev container service
+  devcontainer:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    working_dir: /workspace
+    #   - /var/run/docker.sock:/var/run/docker-host.sock
+    # environment:
+    #   - DOCKER_HOST=unix:///var/run/docker-host.sock
+    networks:
+      - keycloak-test-network
+    # Keep the container running
+    command: sleep infinity
+
+  keycloak:
+    # profiles:
+    #   - testing
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION:-26.3.2}
+    container_name: keycloak-test
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../target/remote-user-federation-jar-with-dependencies.jar:/opt/keycloak/providers/remote-user-federation.jar:ro
+      - ./keycloak/test-realm.json:/opt/keycloak/data/import/test-realm.json:ro
+    command:
+      - start-dev
+      - --import-realm
+    depends_on:
+      - wiremock
+    networks:
+      - keycloak-test-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  wiremock:
+    image: wiremock/wiremock:${WIREMOCK_VERSION:-3.13.1}
+    container_name: wiremock-test
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./wiremock/mocks:/home/wiremock/mappings:ro
+    command:
+      - --global-response-templating
+      - --verbose
+    networks:
+      - keycloak-test-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/__admin/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  keycloak-test-network:
+    driver: bridge
+
+volumes:
+  keycloak-data:
