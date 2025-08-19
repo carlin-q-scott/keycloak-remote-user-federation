@@ -30,6 +30,19 @@ services:
       KC_HTTP_ENABLED: true
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
+      # Logging configuration
+      KC_LOG_LEVEL: DEBUG
+      KC_LOG_CONSOLE_COLOR: true
+      KC_LOG_CONSOLE_FORMAT: "%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n"
+      # Enable verbose logging for your custom provider
+      # QUARKUS_LOG_CATEGORY__ORG_FORREST__LEVEL: TRACE
+      # QUARKUS_LOG_CATEGORY__ORG_KEYCLOAK_STORAGE__LEVEL: DEBUG
+      # QUARKUS_LOG_CATEGORY__ORG_KEYCLOAK_PROVIDER__LEVEL: DEBUG
+      # QUARKUS_LOG_CATEGORY__ORG_KEYCLOAK_EVENTS__LEVEL: DEBUG
+      # QUARKUS_LOG_CATEGORY__ORG_KEYCLOAK_AUTHENTICATION__LEVEL: DEBUG
+      # QUARKUS_LOG_CATEGORY__ORG_KEYCLOAK_CREDENTIAL__LEVEL: DEBUG
+      # Root logger level
+      QUARKUS_LOG_LEVEL: INFO
     ports:
       - "8080:8080"
     volumes:
@@ -38,6 +51,8 @@ services:
     command:
       - start-dev
       - --import-realm
+      - --log-level=DEBUG
+      - --log-console-color=true
     depends_on:
       - wiremock
     networks:
