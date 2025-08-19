@@ -95,28 +95,31 @@
         "subComponents": {},
         "config": {
           "count_user_endpoint": [
-            "/count"
+            "count"
           ],
           "verify_user_endpoint": [
-            "/verify"
+            "verify"
           ],
           "add_role_to_token": [
             "true"
           ],
           "find_user_endpoint": [
-            "/user"
+            "find"
           ],
           "debug_log_enabled": [
             "false"
           ],
           "search_user_endpoint": [
-            "/search"
+            "search"
           ],
           "cachePolicy": [
             "DEFAULT"
           ],
           "url": [
-            "https://wiremock:8080"
+            "http://wiremock:8080/api/"
+          ],
+          "headers_to_forward": [
+            "X-My-Forwarded-Header"
           ],
           "enabled": [
             "true"

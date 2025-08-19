@@ -10,9 +10,7 @@ import org.forrest.keycloak.bind.UserCountResponse;
 import org.forrest.keycloak.bind.VerifyPasswordResponse;
 import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
-import org.keycloak.http.HttpRequest;
 import org.keycloak.models.KeycloakSession;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -29,10 +27,8 @@ public class UserService {
     private final String countUserUrl;
     private final String authorization;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final KeycloakSession session;
 
     public UserService(KeycloakSession session, ComponentModel model, boolean debugLoggingEnabled) {
-        this.session = session;
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
             .addInterceptor(new HeaderForwardingInterceptor(session, model));
 

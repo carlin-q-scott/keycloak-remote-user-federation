@@ -32,8 +32,8 @@ class RemoteUserAdapter extends AbstractUserAdapterFederatedStorage {
 
     @Override
     public SubjectCredentialManager credentialManager() {
-    log("[credentialManager] using new UserCredentialManager...");
-    return new UserCredentialManager(session, realm, this);
+        log("[credentialManager] using new UserCredentialManager...");
+        return new UserCredentialManager(session, realm, this);
     }
 
     @Override

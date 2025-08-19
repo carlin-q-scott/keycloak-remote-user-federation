@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
+import org.keycloak.utils.StringUtil;
 
 import okhttp3.Response;
 
@@ -13,7 +14,10 @@ public class HeaderForwardingInterceptor implements okhttp3.Interceptor {
     private final KeycloakSession session;
 
     public HeaderForwardingInterceptor(KeycloakSession session, ComponentModel model) {
-        this.headersToForward = model.getConfig().getList("headersToForward").toArray(String[]::new);
+        this.headersToForward = model.getConfig().getList("headersToForward")
+            .stream()
+            .filter(header -> !StringUtil.isNullOrEmpty(header))
+            .toArray(String[]::new);
         this.session = session;
     }
 
