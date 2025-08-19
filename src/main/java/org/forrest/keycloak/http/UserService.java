@@ -27,17 +27,19 @@ public class UserService {
     private final String countUserUrl;
     private final String authorization;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    
+    public UserService(ComponentModel model, boolean debugLoggingEnabled) {
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        if (debugLoggingEnabled) {
+            // Create HTTP logging interceptor using JBoss Logger
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(message -> {
+                logger.infof("[HTTP] %s", message);
+            });
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            clientBuilder.addInterceptor(logging);
+        }
 
-    public UserService(ComponentModel model) {
-        // Create HTTP logging interceptor using JBoss Logger
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(message -> {
-            logger.infof("[HTTP] %s", message);
-        });
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        
-        this.httpClient = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
+        this.httpClient = clientBuilder.build();
         this.findUserUrl = model.get(REMOTE_PROVIDER_URL) + model.get(FIND_USER_ENDPOINT);
         this.verifyUserUrl = model.get(REMOTE_PROVIDER_URL) + model.get(VERIFY_USER_ENDPOINT);
         this.searchUserUrl = model.get(REMOTE_PROVIDER_URL) + model.get(SEARCH_USER_ENDPOINT);

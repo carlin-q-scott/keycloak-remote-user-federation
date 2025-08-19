@@ -37,7 +37,12 @@ public class RemoteUserFederationProviderFactory implements UserStorageProviderF
 
     @Override
     public RemoteUserFederationProvider create(KeycloakSession session, ComponentModel model) {
-        return new RemoteUserFederationProvider(session, model, new UserService(model));
+        var debugLoggingEnabled = Boolean.parseBoolean(model.get(DEBUG_ENABLED));
+        return new RemoteUserFederationProvider(
+            session,
+            model, 
+            new UserService(model, debugLoggingEnabled), 
+            debugLoggingEnabled);
     }
 
     @Override

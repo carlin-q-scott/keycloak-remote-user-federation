@@ -18,7 +18,7 @@ import org.keycloak.storage.user.UserQueryProvider;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
-import static org.forrest.keycloak.bind.RemoteUserStorageProviderConstants.DEBUG_ENABLED;
+ 
 
 public class RemoteUserFederationProvider implements UserStorageProvider, UserLookupProvider, CredentialInputValidator, UserQueryProvider {
     private static final Logger logger = Logger.getLogger(RemoteUserFederationProvider.class);
@@ -27,10 +27,13 @@ public class RemoteUserFederationProvider implements UserStorageProvider, UserLo
 
     private final UserService userService;
 
-    public RemoteUserFederationProvider(KeycloakSession session, ComponentModel model, UserService userService) {
+    private final boolean debugLoggingEnabled;
+
+    public RemoteUserFederationProvider(KeycloakSession session, ComponentModel model, UserService userService, boolean debugLoggingEnabled) {
         this.session = session;
         this.model = model;
         this.userService = userService;
+        this.debugLoggingEnabled = debugLoggingEnabled;
     }
 
     @Override
@@ -222,7 +225,7 @@ public class RemoteUserFederationProvider implements UserStorageProvider, UserLo
     }
 
     private void log(String message, Object... params) {
-        if (Boolean.parseBoolean(model.get(DEBUG_ENABLED))) {
+        if (debugLoggingEnabled) {
             logger.infof(message, params);
         }
     }
