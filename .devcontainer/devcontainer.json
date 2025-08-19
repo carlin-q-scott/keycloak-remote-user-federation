@@ -5,6 +5,7 @@
   "workspaceFolder": "/workspace",
   "mounts": [
     "type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,readonly",
+    "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,readonly",
     "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock"
   ],
   "features": {
@@ -23,6 +24,7 @@
       ]
     }
   },
-  "postCreateCommand": "mvn -v || true",
+  "postCreateCommand": ".devcontainer/post-create.sh",
+  "postStartCommand": ".devcontainer/post-start.sh",
   "remoteUser": "vscode"
 }
