@@ -14,7 +14,7 @@ public class HeaderForwardingInterceptor implements okhttp3.Interceptor {
     private final KeycloakSession session;
 
     public HeaderForwardingInterceptor(KeycloakSession session, ComponentModel model) {
-        this.headersToForward = model.getConfig().getList("headersToForward")
+        this.headersToForward = model.getConfig().getList("headers_to_forward")
             .stream()
             .filter(header -> !StringUtil.isNullOrEmpty(header))
             .toArray(String[]::new);
@@ -25,7 +25,7 @@ public class HeaderForwardingInterceptor implements okhttp3.Interceptor {
     public Response intercept(Chain chain) throws IOException {
         var request = chain.request();
         
-        if (headersToForward.length > 0)
+        if (headersToForward.length == 0)
             return chain.proceed(request);
 
         var keycloakRequest = session.getContext().getHttpRequest();
