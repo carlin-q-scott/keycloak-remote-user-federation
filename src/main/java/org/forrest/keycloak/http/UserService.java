@@ -10,6 +10,8 @@ import org.forrest.keycloak.bind.UserCountResponse;
 import org.forrest.keycloak.bind.VerifyPasswordResponse;
 import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
+import org.keycloak.http.HttpRequest;
+import org.keycloak.models.KeycloakSession;
 
 import java.io.IOException;
 import java.util.*;
@@ -27,9 +29,13 @@ public class UserService {
     private final String countUserUrl;
     private final String authorization;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    
-    public UserService(ComponentModel model, boolean debugLoggingEnabled) {
-        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+    private final KeycloakSession session;
+
+    public UserService(KeycloakSession session, ComponentModel model, boolean debugLoggingEnabled) {
+        this.session = session;
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+            .addInterceptor(new HeaderForwardingInterceptor(session, model));
+
         if (debugLoggingEnabled) {
             // Create HTTP logging interceptor using JBoss Logger
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(message -> {
@@ -111,31 +117,35 @@ public class UserService {
 
     public VerifyPasswordResponse verifyPassword(String username, String password) throws IOException {
         RequestBody formBody = RequestBody.create(objectMapper.writeValueAsString(new RemoteCredentialInput(username, password)), JSON);
-        okhttp3.Request.Builder builder = new Request.Builder()
-                .url(verifyUserUrl)
-                .addHeader("User-Agent", UA);
-        if (!"".equals(authorization) && authorization != null) {
-            builder.addHeader("Authorization", authorization);
-        }
+        okhttp3.Request.Builder builder = buildRequest()
+            .url(verifyUserUrl);
+        
         Request request = builder.post(formBody).build();
         Response response = httpClient.newCall(request).execute();
         if (response.body() == null) {
             return new VerifyPasswordResponse(false);
         }
+        
         return objectMapper.readValue(response.body().string(), VerifyPasswordResponse.class);
     }
 
     private Response doQuery(String url, Map<String, String> params) throws IOException {
         HttpUrl.Builder httpBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
-
         for (Map.Entry<String, String> param : params.entrySet()) {
             httpBuilder.addQueryParameter(param.getKey(), param.getValue());
         }
-        Request.Builder request = new Request.Builder().url(httpBuilder.build());
-        request.addHeader("User-Agent", UA);
-        if (!"".equals(authorization) && authorization != null) {
-            request.header("Authorization", authorization);
-        }
+
+        Request.Builder request = buildRequest().url(httpBuilder.build());
         return httpClient.newCall(request.build()).execute();
+    }
+
+    private okhttp3.Request.Builder buildRequest() {
+        var builder = new Request.Builder()
+            .addHeader("User-Agent", UA);
+
+        if (!"".equals(authorization) && authorization != null)
+            builder.addHeader("Authorization", authorization);
+
+        return builder;
     }
 }

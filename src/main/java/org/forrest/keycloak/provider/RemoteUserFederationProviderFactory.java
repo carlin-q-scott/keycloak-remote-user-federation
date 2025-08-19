@@ -24,15 +24,60 @@ public class RemoteUserFederationProviderFactory implements UserStorageProviderF
     public RemoteUserFederationProviderFactory() {
         log.info("Remote user federation provider created");
         configMetadata = ProviderConfigurationBuilder.create()
-                .property().name(REMOTE_PROVIDER_URL).label("Remote server").type(ProviderConfigProperty.STRING_TYPE).defaultValue("https://").add()
-                .property().name(AUTHORIZATION).label("Authorization").type(ProviderConfigProperty.STRING_TYPE).defaultValue("").add()
-                .property().name(FIND_USER_ENDPOINT).label("Define endpoint for find user").type(ProviderConfigProperty.STRING_TYPE).defaultValue("/user").add()
-                .property().name(VERIFY_USER_ENDPOINT).label("Define endpoint for verify password").type(ProviderConfigProperty.STRING_TYPE).defaultValue("/verify").add()
-                .property().name(SEARCH_USER_ENDPOINT).label("Define endpoint for search users").type(ProviderConfigProperty.STRING_TYPE).defaultValue("/search").add()
-                .property().name(COUNT_USER_ENDPOINT).label("Define endpoint for count users").type(ProviderConfigProperty.STRING_TYPE).defaultValue("/count").add()
-                .property().name(ADD_ROLES_TO_TOKEN).label("Add roles to token").type(ProviderConfigProperty.BOOLEAN_TYPE).defaultValue(true).add()
-                .property().name(DEBUG_ENABLED).label("Enable detail logs").type(ProviderConfigProperty.BOOLEAN_TYPE).defaultValue("false").add()
-                .build();
+            .property()
+                .name(REMOTE_PROVIDER_URL)
+                .label("Remote server")
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .defaultValue("https://")
+                .add()
+            .property()
+                .name(AUTHORIZATION)
+                .label("Authorization")
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .defaultValue("")
+                .add()
+            .property()
+                .name(FIND_USER_ENDPOINT)
+                .label("Define endpoint for find user")
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .defaultValue("/user")
+                .add()
+            .property()
+                .name(VERIFY_USER_ENDPOINT)
+                .label("Define endpoint for verify password")
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .defaultValue("/verify")
+                .add()
+            .property()
+                .name(SEARCH_USER_ENDPOINT)
+                .label("Define endpoint for search users")
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .defaultValue("/search")
+                .add()
+            .property()
+                .name(COUNT_USER_ENDPOINT)
+                .label("Define endpoint for count users")
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .defaultValue("/count")
+                .add()
+            .property()
+                .name(ADD_ROLES_TO_TOKEN)
+                .label("Add roles to token")
+                .type(ProviderConfigProperty.BOOLEAN_TYPE)
+                .defaultValue(true)
+                .add()
+            // .property()
+            //     .name(HEADERS_TO_FORWARD)
+            //     .label("Headers to forward")
+            //     .type(ProviderConfigProperty.MULTIVALUED_STRING_TYPE)
+            //     .add()
+            .property()
+                .name(DEBUG_ENABLED)
+                .label("Enable detail logs")
+                .type(ProviderConfigProperty.BOOLEAN_TYPE)
+                .defaultValue("false")
+                .add()
+            .build();
     }
 
     @Override
@@ -41,7 +86,7 @@ public class RemoteUserFederationProviderFactory implements UserStorageProviderF
         return new RemoteUserFederationProvider(
             session,
             model, 
-            new UserService(model, debugLoggingEnabled), 
+            new UserService(session, model, debugLoggingEnabled), 
             debugLoggingEnabled);
     }
 

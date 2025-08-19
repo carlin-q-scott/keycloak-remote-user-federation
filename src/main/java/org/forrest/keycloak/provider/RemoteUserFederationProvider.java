@@ -13,13 +13,10 @@ import org.keycloak.storage.StorageId;
 import org.keycloak.storage.UserStorageProvider;
 import org.keycloak.storage.user.UserLookupProvider;
 import org.keycloak.storage.user.UserQueryProvider;
-
-
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
  
-
 public class RemoteUserFederationProvider implements UserStorageProvider, UserLookupProvider, CredentialInputValidator, UserQueryProvider {
     private static final Logger logger = Logger.getLogger(RemoteUserFederationProvider.class);
     private final KeycloakSession session;

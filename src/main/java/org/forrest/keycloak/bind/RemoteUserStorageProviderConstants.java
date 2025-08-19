@@ -12,4 +12,7 @@ public class RemoteUserStorageProviderConstants {
 
     public static final int URL_MIN_LENGTH = 10;
     public static final String DEBUG_ENABLED = "debug_log_enabled";
+
+    public static final String HEADERS_TO_FORWARD = "headers_to_forward";
 }
+
