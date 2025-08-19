@@ -1,0 +1,36 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/find",
+    "queryParameters": {
+      "type": {
+        "equalTo": "email"
+      },
+      "email": {
+        "equalTo": "john.doe@example.com"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "id": "user-1",
+      "firstName": "John",
+      "lastName": "Doe",
+      "userName": "john.doe",
+      "email": "john.doe@example.com",
+      "emailVerified": true,
+      "enabled": true,
+      "createdAt": "2024-01-01 10:00:00",
+      "attributes": {
+        "department": "Engineering",
+        "location": "Remote"
+      },
+      "roles": ["user", "developer"]
+    }
+  }
+}

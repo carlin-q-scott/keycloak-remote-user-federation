@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPathEqualTo": "/api/users/search",
+    "urlPath": "/api/search",
     "queryParameters": {
       "search": {
         "equalTo": "john"
@@ -28,21 +28,6 @@
           "location": "Remote"
         },
         "roles": ["user", "developer"]
-      },
-      {
-        "id": "user-4",
-        "firstName": "Johnny",
-        "lastName": "Walker",
-        "userName": "johnny.walker",
-        "email": "johnny.walker@example.com",
-        "emailVerified": true,
-        "enabled": true,
-        "createdAt": "2024-01-04 16:45:00",
-        "attributes": {
-          "department": "Sales",
-          "location": "Office"
-        },
-        "roles": ["user", "sales"]
       }
     ]
   }

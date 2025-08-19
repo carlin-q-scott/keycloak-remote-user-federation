@@ -1,13 +1,14 @@
 {
+  "priority": 10,
   "request": {
     "method": "GET",
-    "urlPathEqualTo": "/api/users/find",
+    "urlPath": "/api/find",
     "queryParameters": {
       "type": {
-        "equalTo": "username"
+        "equalTo": ".*"
       },
       "username": {
-        "equalTo": "nonexistent"
+        "matches": ".*"
       }
     }
   },
@@ -17,8 +18,7 @@
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "error": "User not found",
-      "code": "USER_NOT_FOUND"
+      "error": "User not found"
     }
   }
 }

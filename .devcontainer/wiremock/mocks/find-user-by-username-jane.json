@@ -1,0 +1,36 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/find",
+    "queryParameters": {
+      "type": {
+        "equalTo": "username"
+      },
+      "username": {
+        "equalTo": "jane.smith"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "id": "user-2",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "userName": "jane.smith",
+      "email": "jane.smith@example.com",
+      "emailVerified": true,
+      "enabled": true,
+      "createdAt": "2024-01-01 10:00:00",
+      "attributes": {
+        "department": "Marketing",
+        "location": "Headquarters"
+      },
+      "roles": ["user", "marketing"]
+    }
+  }
+}

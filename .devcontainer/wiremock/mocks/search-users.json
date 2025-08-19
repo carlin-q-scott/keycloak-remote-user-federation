@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPathEqualTo": "/api/users/search"
+    "urlPath": "/api/search"
   },
   "response": {
     "status": 200,
@@ -35,7 +35,7 @@
         "createdAt": "2024-01-02 14:30:00",
         "attributes": {
           "department": "Marketing",
-          "location": "Office"
+          "location": "Headquarters"
         },
         "roles": ["user", "marketing"]
       },
