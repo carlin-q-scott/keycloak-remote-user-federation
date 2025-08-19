@@ -3,10 +3,12 @@ package org.forrest.keycloak.http;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.forrest.keycloak.bind.RemoteCredentialInput;
 import org.forrest.keycloak.bind.RemoteUserEntity;
 import org.forrest.keycloak.bind.UserCountResponse;
 import org.forrest.keycloak.bind.VerifyPasswordResponse;
+import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
 
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.*;
 import static org.forrest.keycloak.bind.RemoteUserStorageProviderConstants.*;
 
 public class UserService {
+    private static final Logger logger = Logger.getLogger(UserService.class);
     private final String UA = "Keycloak User Federation SPI";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private final OkHttpClient httpClient;
@@ -26,7 +29,15 @@ public class UserService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public UserService(ComponentModel model) {
-        this.httpClient = new OkHttpClient();
+        // Create HTTP logging interceptor using JBoss Logger
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(message -> {
+            logger.infof("[HTTP] %s", message);
+        });
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        
+        this.httpClient = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
         this.findUserUrl = model.get(REMOTE_PROVIDER_URL) + model.get(FIND_USER_ENDPOINT);
         this.verifyUserUrl = model.get(REMOTE_PROVIDER_URL) + model.get(VERIFY_USER_ENDPOINT);
         this.searchUserUrl = model.get(REMOTE_PROVIDER_URL) + model.get(SEARCH_USER_ENDPOINT);
