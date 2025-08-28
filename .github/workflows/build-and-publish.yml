@@ -3,40 +3,47 @@ name: Build and Publish
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  release:
-    types: [created]
+  
 
 jobs:
-  build:
+  ci:
+    name: Build & Publish
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: '17'
-          cache: maven
-      - name: Build with Maven
-        run: mvn -B package
+      - uses: actions/checkout@v4
 
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
           cache: maven
-          server-id: github
-          server-username: GITHUB_ACTOR
-          server-password: GITHUB_TOKEN
-      - name: Publish package
+
+      - name: Identify version
+        id: get-version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Project version: $VERSION"
+      
+      - name: Build 
+        run: mvn -B -ntp -DskipTests=false clean package
+
+      - name: Publish jars
         run: mvn -B deploy -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${{ github.repository }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Github release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.get-version.outputs.version }}
+          release_name: Release v${{ steps.get-version.outputs.version }}
+          body: Release of version ${{ steps.get-version.outputs.version }}
+          draft: false
+          # A semver tag containing a '-' is a pre-release
+          prerelease: ${{ contains(steps.get-version.outputs.version, '-') }}
+        
