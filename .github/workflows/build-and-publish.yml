@@ -3,7 +3,7 @@ name: Build and Publish
 on:
   push:
     branches: ["main"]
-  
+  workflow_dispatch:
 
 jobs:
   ci:
@@ -37,15 +37,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Github release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ steps.get-version.outputs.version }}
-          release_name: Release v${{ steps.get-version.outputs.version }}
+          name: Release v${{ steps.get-version.outputs.version }}
           body: Release of version ${{ steps.get-version.outputs.version }}
           draft: false
           # A semver tag containing a '-' is a pre-release
           prerelease: ${{ contains(steps.get-version.outputs.version, '-') }}
+          files: |
+            target/remote-user-federation.jar
+            target/remote-user-federation-jar-with-dependencies.jar
+          generate_release_notes: false
         
