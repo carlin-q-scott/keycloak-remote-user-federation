@@ -1,7 +1,6 @@
 package org.forrest.keycloak;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.forrest.keycloak.bind.RemoteUserEntity;
 import org.junit.jupiter.api.Test;
@@ -18,10 +17,7 @@ public class JsonParsingTest {
 
     @BeforeEach
     public void setUp() {
-        // Configure ObjectMapper the same way as in UserService
         objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
     }
 
     @Test
